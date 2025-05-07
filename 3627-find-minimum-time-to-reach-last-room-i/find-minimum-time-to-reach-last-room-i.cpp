@@ -1,33 +1,64 @@
 class Solution {
 public:
-    int minTimeToReach(vector<vector<int>>&a) {
-        int n=a.size(),m=a[0].size();
-        priority_queue<pair<int,pair<int,int>>>Q;
-        Q.push({0,{0,0}});
-        vector<vector<int>>dist(n,vector<int>(m,INT_MAX));
-        dist[0][0]=0;
-        while(!Q.empty()){
-            int newd=Q.top().first;
-            int x=Q.top().second.first;
-            int y=Q.top().second.second;
-            Q.pop();
-            if(y+1<m&&dist[x][y+1]>max(newd+1,a[x][y+1]+1)){
-                Q.push({max(newd+1,a[x][y+1]+1),{x,y+1}});
-                dist[x][y+1]=max(newd+1,a[x][y+1]+1);
-            }
-            if(x-1>=0&&dist[x-1][y]>max(newd+1,a[x-1][y]+1)){
-                Q.push({max(newd+1,a[x-1][y]+1),{x-1,y}});
-                dist[x-1][y]=max(newd+1,a[x-1][y]+1);
-            }
-            if(y-1>=0&&dist[x][y-1]>max(newd+1,a[x][y-1]+1)){
-                Q.push({max(newd+1,a[x][y-1]+1),{x,y-1}});
-                dist[x][y-1]=max(newd+1,a[x][y-1]+1);
-            }
-            if(x+1<n&&dist[x+1][y]>max(newd+1,a[x+1][y]+1)){
-                Q.push({max(newd+1,a[x+1][y]+1),{x+1,y}});
-                dist[x+1][y]=max(newd+1,a[x+1][y]+1);
+// int ans = 100000;
+
+
+    int minTimeToReach(vector<vector<int> >& moveTime){
+      int n = moveTime.size();
+      int m = moveTime[0].size();
+
+        // vector<vector<int> >dp(n,vector<int>(m,-1));
+        // int time =0;
+        // int k = solve(0,0,moveTime,dp,time);
+        // return ans;
+
+
+        int row[4] = {-1,0,1,0};
+    int col[4] = {0,1,0,-1};
+      
+        priority_queue<pair<int,pair<int,int> >,vector<pair<int,pair<int,int> > >,greater<pair<int,pair<int,int> > > >pq;
+    
+    pq.push(make_pair(0,make_pair(0,0)));
+
+        int ans = INT_MAX;
+        while(pq.size()>0){
+            int size = pq.size();
+
+            for(int i =0;i<size;i++){
+                auto frnt = pq.top();
+                pq.pop();
+                int r = frnt.second.first;
+                int c = frnt.second.second;
+                 int wt = frnt.first;
+                if(r==n-1 && c == m-1){
+                    ans = min(ans,wt);
+                }
+               
+
+                  for(int l=0;l<4;l++){
+                          int p1 = r + row[l];
+                          int p2 = c + col[l];
+                    if( p1>=0 && p2 >=0 && p1<moveTime.size() && p2<moveTime[0].size() && moveTime[p1][p2] != -1 ){
+                        int v= moveTime[p1][p2];
+                        if(wt<v){
+                            pq.push(make_pair(v+1,make_pair(p1,p2)));
+
+                        }
+                        else{
+                            pq.push(make_pair(wt+1,make_pair(p1,p2)));
+                        }
+                        moveTime[p1][p2] = -1;
+
+                  }
+
+
+
             }
         }
-        return dist[n-1][m-1];
+        
+
+        
+    }
+    return ans;
     }
 };
