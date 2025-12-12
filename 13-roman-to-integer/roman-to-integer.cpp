@@ -1,23 +1,25 @@
 class Solution {
 public:
-    int romanToInt(string s) 
-    {
-        int ans=0,n=s.length();
-        unordered_map<char,int> mp = {{'I',1},{'V',5},{'X',10},{'L',50},{'C',100},{'D',500},{'M',1000}};
-        auto x=mp.find(s[n-1]);
-        ans+=x->second;
-        for(int i=n-2;i>=0;i--)
-        {
-         auto curr=mp.find(s[i]);
-         auto prev=mp.find(s[i+1]);
-            if(curr->second < prev->second)
-            {
-                ans-=curr->second;
-            }
-            else{
-                ans+=curr->second;
-            }
+    int romanToInt(string s) {
+        int val[256] = {};
+        val['I'] = 1;
+        val['V'] = 5;
+        val['X'] = 10;
+        val['L'] = 50;
+        val['C'] = 100;
+        val['D'] = 500;
+        val['M'] = 1000;
+
+        int ans = 0;
+        int n = s.size();
+
+        for (int i = 0; i < n; i++) {
+            if (i + 1 < n && val[s[i]] < val[s[i + 1]])
+                ans -= val[s[i]];
+            else
+                ans += val[s[i]];
         }
+
         return ans;
     }
 };
